@@ -6,7 +6,7 @@ const FILES_TO_CACHE = [
   "/icons/icon-512x512.png",
   "manifest.webmanifest",
   "styles.css",
-  "/offline.js",
+  "/db.js",
 ];
 
 const CACHE_NAME = "static-cache-v2";
