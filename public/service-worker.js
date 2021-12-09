@@ -44,24 +44,24 @@ self.addEventListener("activate", (event) => {
 });
 
 // fetch
-self.addEventListener("fetch", function (evt) {
-  if (evt.request.url.includes("/api/")) {
-    evt.respondWith(
+self.addEventListener("fetch", function (event) {
+  if (event.request.url.includes("/api/")) {
+    event.respondWith(
       caches
         .open(DATA_CACHE_NAME)
         .then((cache) => {
-          return fetch(evt.request)
+          return fetch(event.request)
             .then((response) => {
               // If the response was good, clone it and store it in the cache.
               if (response.status === 200) {
-                cache.put(evt.request.url, response.clone());
+                cache.put(event.request.url, response.clone());
               }
 
               return response;
             })
             .catch((err) => {
               // Network request failed, try to get it from the cache.
-              return cache.match(evt.request);
+              return cache.match(event.request);
             });
         })
         .catch((err) => console.log(err))
@@ -70,10 +70,10 @@ self.addEventListener("fetch", function (evt) {
     return;
   }
 
-  evt.respondWith(
+  event.respondWith(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.match(evt.request).then((response) => {
-        return response || fetch(evt.request);
+      return cache.match(event.request).then((response) => {
+        return response || fetch(event.request);
       });
     })
   );
