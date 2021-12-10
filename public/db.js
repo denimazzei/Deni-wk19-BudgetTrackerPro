@@ -22,6 +22,12 @@ request.onerror = function (event) {
   console.log("Uh oh! " + event.target.errorCode);
 };
 
+function saveRecord(record) {
+  const transaction = db.transaction(["pending"], "readwrite");
+  const store = transaction.objectStore("pending");
+  store.add(record);
+}
+
 function checkDatabase() {
   const transaction = db.transaction(["pending"], "readwrite");
   const store = transaction.objectStore("pending");
@@ -38,22 +44,20 @@ function checkDatabase() {
         },
       })
         .then((response) => response.json())
-        .then((res) => {
-          if (res.length !== 0) {
-            const transaction = db.transaction(["pending"], "readwrite");
-            const store = transaction.objectStore("pending");
-            store.clear();
-            console.log("Clearing store");
-          }
+        .then(() => {
+          const transaction = db.transaction(["pending"], "readwrite");
+          const store = transaction.objectStore("pending");
+          store.clear();
+          console.log("Clearing store");
         });
     }
   };
-
-  function saveRecord(record) {
-    const transaction = db.transaction(["pending"], "readwrite");
-    const store = transaction.objectStore("pending");
-    store.add(record);
-  }
+}
+function deletePending() {
+  const transaction = db.transaction(["pending"], "readwrite");
+  const store = transaction.objectStore("pending");
+  store.clear();
+  console.log("Pending deleted");
 }
 
 //event listener for coming back online
